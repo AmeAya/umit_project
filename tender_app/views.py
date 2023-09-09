@@ -1,14 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import permissions
-from django.contrib.auth import authenticate, login
+from rest_framework.permissions import *
+from django.contrib.auth import authenticate, login, logout
 from .models import *
 from .functions import *
 
 
 class EmailCheckApiView(APIView):
-    permission_classes = [permissions.AllowAny, ]
+    permission_classes = [AllowAny, ]
 
     def get(self, request):
         email = request.GET.get('email')
@@ -33,7 +33,7 @@ class EmailCheckApiView(APIView):
 
 
 class LogInApiView(APIView):
-    permission_classes = [permissions.AllowAny, ]
+    permission_classes = [AllowAny, ]
 
     def post(self, request):
         if 'email' not in request.data.keys():
@@ -45,3 +45,11 @@ class LogInApiView(APIView):
             return Response({'message': 'Login and/or password is not valid'}, status=status.HTTP_403_FORBIDDEN)
         login(request, user)
         return Response({'message': 'User is logged in!'}, status=status.HTTP_202_ACCEPTED)
+
+
+class LogOutApiView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        logout(request)
+        return Response({'message': 'User is logged out!'}, status=status.HTTP_200_OK   )
