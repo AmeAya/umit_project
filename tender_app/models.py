@@ -68,6 +68,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
+class EmailCode(models.Model):
+    email = models.EmailField()
+    code = models.CharField(max_length=6)
+
+    def __str__(self):
+        return str(self.email) + ' ' + str(self.code)
+
+    class Meta:
+        verbose_name = 'EmailCode'
+        verbose_name_plural = 'EmailCodes'
+
+
 class Feedback(models.Model):
     author = models.ForeignKey('Company', on_delete=models.SET_NULL, null=True)
     text = models.TextField()
