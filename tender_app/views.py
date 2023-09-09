@@ -1,13 +1,14 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import permissions
+from django.contrib.auth import authenticate, login
 from .models import *
 from .functions import *
 
 
 class EmailCheckApiView(APIView):
-    permission_classes = []
+    permission_classes = [permissions.AllowAny, ]
 
     def get(self, request):
         email = request.GET.get('email')
@@ -30,3 +31,17 @@ class EmailCheckApiView(APIView):
             return Response({'message': 'Email is confirmed!'}, status=status.HTTP_200_OK)
         return Response({'message': 'Code is not valid!'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class LogInApiView(APIView):
+    permission_classes = [permissions.AllowAny, ]
+
+    def post(self, request):
+        if 'email' not in request.data.keys():
+            return Response({'message': 'Email is required!'}, status=status.HTTP_400_BAD_REQUEST)
+        if 'password' not in request.data.keys():
+            return Response({'message': 'Password is required!'}, status=status.HTTP_400_BAD_REQUEST)
+        user = authenticate(username=request.data['email'], password=request.data['password'])
+        if not user:
+            return Response({'message': 'Login and/or password is not valid'}, status=status.HTTP_403_FORBIDDEN)
+        login(request, user)
+        return Response({'message': 'User is logged in!'}, status=status.HTTP_202_ACCEPTED)
