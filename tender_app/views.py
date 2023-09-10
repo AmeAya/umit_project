@@ -7,6 +7,24 @@ from .models import *
 from .functions import *
 
 
+class BasicRegistrationApiView(APIView):
+    permission_classes = [AllowAny, ]
+
+    def post(self, request):
+        required_fields = ['email', 'password1', 'password2', 'type']
+        for field in required_fields:
+            if field not in request.data.keys():
+                return Response({'message': field.capitalize() + ' is required!'}, status=status.HTTP_400_BAD_REQUEST)
+        if request.data['type'] not in ['company', 'worker']:
+            return Response({'message': 'Type must be "company" or "worker"!'}, status=status.HTTP_400_BAD_REQUEST)
+        if request.data['password1'] != request.data['password2']:
+            return Response({'message': 'Passwords didn`t match!'}, status=status.HTTP_400_BAD_REQUEST)
+        user = CustomUser(email=request.data['email'], type=request.data['type'])
+        user.set_password(request.data['password1'])
+        user.save()
+        return Response({'message': 'User is created!', 'email': user.email}, status=status.HTTP_201_CREATED)
+
+
 class EmailCheckApiView(APIView):
     permission_classes = [AllowAny, ]
 
@@ -50,6 +68,6 @@ class LogInApiView(APIView):
 class LogOutApiView(APIView):
     permission_classes = [IsAuthenticated, ]
 
-    def get(self, request):
+    def post(self, request):
         logout(request)
-        return Response({'message': 'User is logged out!'}, status=status.HTTP_200_OK   )
+        return Response({'message': 'User is logged out!'}, status=status.HTTP_200_OK)

@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.validators import MinLengthValidator
-from.managers import CustomUserManager
+from django.utils import timezone
+from .managers import CustomUserManager
 
 
 class Bundle(models.Model):
@@ -52,13 +53,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_subscribed = models.BooleanField(default=False)
-    expired_date = models.DateField(auto_now_add=True)
-    type = models.CharField(max_length=55, choices=[('company', 'company'), ('worker', 'worker')])
+    expired_date = models.DateField()
+    type = models.CharField(max_length=55, choices=[('company', 'company'), ('worker', 'worker'), ('admin', 'admin')])
+    is_active = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+    def save(self, *args, **kwargs):
+        self.expired_date = timezone.now()
+        super(CustomUser, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'User'
