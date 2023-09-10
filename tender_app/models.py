@@ -55,7 +55,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_subscribed = models.BooleanField(default=False)
     expired_date = models.DateField()
     type = models.CharField(max_length=55, choices=[('company', 'company'), ('worker', 'worker'), ('admin', 'admin')])
-    is_active = models.BooleanField(default=False)
+    is_registered = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

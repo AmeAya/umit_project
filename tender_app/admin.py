@@ -15,7 +15,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password', 'type')}),
         ('Subscription', {'fields': ('is_subscribed', 'expired_date',)}),
-        ('Permissions', {'fields': ('is_staff', 'is_superuser', 'is_active',)}),
+        ('Permissions', {'fields': ('is_staff', 'is_superuser', 'is_registered',)}),
     )
     add_fieldsets = (
         (None, {
@@ -28,7 +28,7 @@ class CustomUserAdmin(UserAdmin):
                 'expired_date',
                 'is_staff',
                 'is_superuser',
-                'is_active',
+                'is_registered',
             )}
          ),
     )
