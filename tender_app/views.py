@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import *
 from django.contrib.auth import authenticate, login, logout
-from serializers import *
+from .serializers import *
 from .models import *
 from .functions import *
 
@@ -26,43 +26,22 @@ class BasicRegistrationApiView(APIView):
         return Response({'message': 'User is created!', 'email': user.email}, status=status.HTTP_201_CREATED)
 
 
-class BundleApiView(APIView):
+class BundleListApiView(APIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = BundleSerializer
 
-    def get(self):
+    def get(self, request):
         query = Bundle.objects.all()
         return Response(data=BundleSerializer(query, many=True).data, status=status.HTTP_200_OK)
 
-    def post(self):
-        pass
 
-
-class CityApiView(APIView):
+class CityListApiView(APIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = CitySerializer
 
-    def get(self):
+    def get(self, request):
         query = City.objects.all()
         return Response(data=CitySerializer(query, many=True).data, status=status.HTTP_200_OK)
-
-
-class SectionListApiView(APIView):
-    permission_classes = [IsAuthenticated, ]
-    serializer_class = SectionSerializer
-
-    def get(self):
-        query = Section.objects.all()
-        return Response(data=SectionSerializer(query, many=True).data, status=status.HTTP_200_OK)
-
-
-class SubSectionListApiView(APIView):
-    permission_classes = [IsAuthenticated, ]
-    serializer_class = SubSectionSerializer
-
-    def get(self):
-        query = Subsection.objects.all()
-        return Response(data=SubSectionSerializer(query, many=True).data, status=status.HTTP_200_OK)
 
 
 class EmailCheckApiView(APIView):
@@ -111,3 +90,21 @@ class LogOutApiView(APIView):
     def post(self, request):
         logout(request)
         return Response({'message': 'User is logged out!'}, status=status.HTTP_200_OK)
+
+
+class SectionListApiView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = SectionSerializer
+
+    def get(self, request):
+        query = Section.objects.all()
+        return Response(data=SectionSerializer(query, many=True).data, status=status.HTTP_200_OK)
+
+
+class SubSectionListApiView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = SubSectionSerializer
+
+    def get(self, request):
+        query = Subsection.objects.all()
+        return Response(data=SubSectionSerializer(query, many=True).data, status=status.HTTP_200_OK)
