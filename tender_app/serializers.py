@@ -14,6 +14,13 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ('id', 'user', 'name', 'bin', 'address', 'face', 'face_phone', 'favourites', 'requisites',
+                  'license', 'gos_reg')
+
+
 class SectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
@@ -24,3 +31,18 @@ class SubSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subsection
         fields = ('id', 'name')
+
+
+class TenderFilterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tender
+        fields = ('id', 'author', 'city', 'types_of_work', 'date', 'expire_date', 'budget')
+
+        def to_representation(self, instance):
+            return {'author': instance.author.name, 'city': instance.city.name}
+
+
+class WorkerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Worker
+        fields = ('id', 'name', 'bin', 'description', 'director', 'rating', 'cities', 'types_of_work')

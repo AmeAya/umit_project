@@ -44,6 +44,20 @@ class CityListApiView(APIView):
         return Response(data=CitySerializer(query, many=True).data, status=status.HTTP_200_OK)
 
 
+class CompanyDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = CompanySerializer
+
+    def get(self, request):
+        query = Company.objects.get(id=request.GET.get('id'))
+        return Response(data=CompanySerializer(query).data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        company = Company.objects.get(id=request.GET.get('id'))
+        query = Tender.objects.filter(author=company)
+        return Response(data=TenderFilterSerializer(query, many=True).data, status=status.HTTP_200_OK)
+
+
 class EmailCheckApiView(APIView):
     permission_classes = [AllowAny, ]
 
@@ -108,3 +122,21 @@ class SubSectionListApiView(APIView):
     def get(self, request):
         query = Subsection.objects.all()
         return Response(data=SubSectionSerializer(query, many=True).data, status=status.HTTP_200_OK)
+
+
+class TenderListApiView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = TenderFilterSerializer
+
+    def get(self, request):
+        query = Tender.objects.filter(is_active=True)
+        return Response(data=TenderFilterSerializer(query, many=True).data, status=status.HTTP_200_OK)
+
+
+class WorkerDetailApiView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = WorkerSerializer
+
+    def get(self, request):
+        query = Worker.objects.filter(is_active=True)
+        return Response(data=WorkerSerializer(query).data, status=status.HTTP_200_OK)
