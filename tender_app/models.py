@@ -125,22 +125,10 @@ class Section(models.Model):
         verbose_name_plural = 'Sections'
 
 
-class Subsection(models.Model):
-    name = models.CharField(max_length=255)
-    section = models.ForeignKey('Section', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Subsection'
-        verbose_name_plural = 'Subsections'
-
-
 class Tender(models.Model):
     author = models.ForeignKey('Company', on_delete=models.CASCADE)
     city = models.ForeignKey('City', on_delete=models.CASCADE)
-    types_of_work = models.ManyToManyField('Subsection')
+    types_of_work = models.ManyToManyField('Section')
     date = models.DateTimeField(auto_now_add=True)
     expire_date = models.DateTimeField(null=True, blank=True)
     budget = models.FloatField()
@@ -177,9 +165,9 @@ class Worker(models.Model):
     director = models.TextField()
     phone = models.CharField(max_length=12, validators=[MinLengthValidator(11)])
     rating = models.FloatField()
-    feedbacks = models.ManyToManyField('feedback')
-    cities = models.ManyToManyField('city')
-    types_of_work = models.ManyToManyField('subsection')
+    feedbacks = models.ManyToManyField('Feedback')
+    cities = models.ManyToManyField('City')
+    types_of_work = models.ManyToManyField('Section')
     docs = models.ManyToManyField('WorkerDoc')
 
     def __str__(self):

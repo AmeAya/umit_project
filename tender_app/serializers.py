@@ -22,5 +22,16 @@ class SectionSerializer(serializers.ModelSerializer):
 
 class SubSectionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Subsection
+        model = Section
         fields = ('id', 'name')
+
+
+def getInfoSerializer(obj: dict, user_type: str) -> dict:
+    data = {
+        'bin': obj['bin'],
+        'name': obj['name'],
+        'registered_date': obj['registerDate']
+    }
+    if user_type == 'company':
+        data.update({'address': obj['katoAddress']})
+    return data

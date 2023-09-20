@@ -43,7 +43,6 @@ admin.site.register(
         Feedback,
         Reply,
         Section,
-        Subsection,
         Tender,
         TenderDoc,
         Worker,
