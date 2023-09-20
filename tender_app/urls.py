@@ -12,4 +12,5 @@ urlpatterns = [
     path('log_out', LogOutApiView.as_view(), name='log_out_url'),
     path('sections', SectionListApiView.as_view(), name='sections_url'),
     path('subsections', SubSectionListApiView.as_view(), name='subsections_url'),
+    path('worker_feedbacks', WorkerFeedbacksApiView.as_view(), name='worker_feedbacks_url'),
 ]

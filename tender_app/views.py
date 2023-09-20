@@ -155,3 +155,13 @@ class SubSectionListApiView(APIView):
     def get(self, request):
         query = Section.objects.all()
         return Response(data=SubSectionSerializer(query, many=True).data, status=status.HTTP_200_OK)
+
+
+class WorkerFeedbacksApiView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        if 'id' not in request.GET.keys():
+            return Response({'message': 'Id is required!'}, status=status.HTTP_400_BAD_REQUEST)
+        query = Worker.objects.get(id=request.GET.get('id'))
+        return Response(data=FeedbackSerializer(query.feedbacks.all(), many=True).data, status=status.HTTP_200_OK)

@@ -14,16 +14,15 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class SectionSerializer(serializers.ModelSerializer):
+class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Section
-        fields = ('id', 'name')
+        model = Feedback
+        fields = '__all__'
 
-
-class SubSectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Section
-        fields = ('id', 'name')
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation.update({'author': instance.author.name})
+        return representation
 
 
 def getInfoSerializer(obj: dict, user_type: str) -> dict:
@@ -35,3 +34,15 @@ def getInfoSerializer(obj: dict, user_type: str) -> dict:
     if user_type == 'company':
         data.update({'address': obj['katoAddress']})
     return data
+
+
+class SectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ('id', 'name')
+
+
+class SubSectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Section
+        fields = ('id', 'name')
