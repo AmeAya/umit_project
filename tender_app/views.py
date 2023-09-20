@@ -44,6 +44,19 @@ class CityListApiView(APIView):
         return Response(data=CitySerializer(query, many=True).data, status=status.HTTP_200_OK)
 
 
+class CompanyCreateApiView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = CompanySerializer
+
+    def post(self, request):
+        company = Company(user=request.user, name=request.data['name'], bin=request.data['bin'],
+                          address=request.data['address'], face=request.data['face'],
+                          face_phone=request.data['face_phone'], favourites=request.data['favourites'],
+                          requisites=request.data['requisites'], license=request.data['license'],
+                          gos_reg=request.data['gos_reg'])
+        company.save()
+
+
 class CompanyDetailAPIView(APIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = CompanySerializer
@@ -127,10 +140,19 @@ class SubSectionListApiView(APIView):
 class TenderListApiView(APIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = TenderFilterSerializer
+    filterset_fields = ['city', 'types_of_work', 'budget', 'author']
 
     def get(self, request):
         query = Tender.objects.filter(is_active=True)
         return Response(data=TenderFilterSerializer(query, many=True).data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        author = Company.objects.get(user=request.user)
+        tender = Tender(author=author, city=request.data['city'], types_of_work =request.data['types_of_work '],
+                        expired_date=request.data['expired_date'], budget=request.data['budget'],
+                        description=request.data['description'], docs=request.data['docs'])
+        tender.save()
+        return Response(data='Tender create', status=status.HTTP_201_CREATED)
 
 
 class WorkerDetailApiView(APIView):
@@ -141,6 +163,3 @@ class WorkerDetailApiView(APIView):
         query = Worker.objects.get(id=request.GET.get('id'))
         return Response(data=WorkerSerializer(query).data, status=status.HTTP_200_OK)
 
-    def post(self, request):
-        company = Company(user=request.user, name=request.data['name'])
-        company.save()
