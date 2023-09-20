@@ -138,5 +138,9 @@ class WorkerDetailApiView(APIView):
     serializer_class = WorkerSerializer
 
     def get(self, request):
-        query = Worker.objects.filter(is_active=True)
+        query = Worker.objects.get(id=request.GET.get('id'))
         return Response(data=WorkerSerializer(query).data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        company = Company(user=request.user, name=request.data['name'])
+        company.save()
