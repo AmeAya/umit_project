@@ -157,9 +157,20 @@ class TenderListApiView(APIView):
 
 class WorkerDetailApiView(APIView):
     permission_classes = [IsAuthenticated, ]
-    serializer_class = WorkerSerializer
+    serializer_class = WorkerDetailSerializer
 
     def get(self, request):
         query = Worker.objects.get(id=request.GET.get('id'))
-        return Response(data=WorkerSerializer(query).data, status=status.HTTP_200_OK)
+        return Response(data=WorkerDetailSerializer(query).data, status=status.HTTP_200_OK)
 
+
+class WorkerCreateApiView(APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = WorkerSerializer
+
+    def post(self, request):
+        worker = Worker(user=request.user, name=request.data['name'], bin=request.data['bin'],
+                        description=request.data['description'], director=request.data['director'],
+                        phone=request.data['phone'], rating=request.data['rating'], cities=request.data['cities'],
+                        types_of_work=request.data['types_of_work'], docs=request.data['docs'])
+        worker.save()

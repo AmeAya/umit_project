@@ -36,7 +36,7 @@ class Company(models.Model):
     address = models.TextField()
     face = models.TextField()
     face_phone = models.CharField(max_length=12, validators=[MinLengthValidator(11)])
-    favourites = models.ManyToManyField('Worker')
+    favourites = models.ManyToManyField('Worker', blank=True)
     requisites = models.FileField(upload_to='docs/companies/requisites/')
     license = models.FileField(upload_to='docs/companies/license/')
     gos_reg = models.FileField(upload_to='docs/companies/gos_reg/')
@@ -147,7 +147,7 @@ class Tender(models.Model):
     description = models.TextField(null=True, blank=True)
     docs = models.ManyToManyField('TenderDoc')
     is_active = models.BooleanField(default=True)
-    replies = models.ManyToManyField('Reply')
+    replies = models.ManyToManyField('Reply', blank=True)
 
     def __str__(self):
         return str(self.date) + ' ' + self.author.name
@@ -176,8 +176,8 @@ class Worker(models.Model):
     description = models.TextField()
     director = models.TextField()
     phone = models.CharField(max_length=12, validators=[MinLengthValidator(11)])
-    rating = models.FloatField()
-    feedbacks = models.ManyToManyField('feedback')
+    rating = models.FloatField(blank=True)
+    feedbacks = models.ManyToManyField('feedback', blank=True)
     cities = models.ManyToManyField('city')
     types_of_work = models.ManyToManyField('subsection')
     docs = models.ManyToManyField('WorkerDoc')
